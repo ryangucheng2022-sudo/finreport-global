@@ -1,0 +1,170 @@
+{
+  "default_companies": [
+    "TI",
+    "Infineon",
+    "NXP",
+    "STM",
+    "ADI",
+    "Renesas",
+    "onsemi",
+    "Microchip",
+    "MPS",
+    "Silergy"
+  ],
+  "source_priority": [
+    "eastmoney_us",
+    "msn_crosscheck",
+    "official_filing"
+  ],
+  "companies": {
+    "TI": {
+      "eastmoney_secu_code": "TXN.O",
+      "display_name": "德州仪器 TI",
+      "legal_name": "Texas Instruments Incorporated",
+      "reporting_currency": "USD",
+      "fiscal_note": "Calendar-year reporter; quarters align with calendar quarters.",
+      "primary_domains": ["investor.ti.com"],
+      "query_templates": {
+        "quarter": "Texas Instruments reports {period_label} {year} financial results revenue",
+        "half_year": "Texas Instruments {year} first half revenue quarterly results",
+        "annual": "Texas Instruments {year} annual revenue annual report"
+      }
+    },
+    "Infineon": {
+      "display_name": "英飞凌 Infineon",
+      "legal_name": "Infineon Technologies AG",
+      "reporting_currency": "EUR",
+      "fiscal_note": "Fiscal year ends September 30. Calendar Q1 usually maps to fiscal Q2.",
+      "primary_domains": ["infineon.com", "investors.infineon.com", "eqs-news.com"],
+      "query_templates": {
+        "quarter": "Infineon {fiscal_period_label} {fiscal_year} results revenue",
+        "half_year": "Infineon first half fiscal {fiscal_year} revenue",
+        "annual": "Infineon fiscal year {fiscal_year} revenue annual results"
+      }
+    },
+    "NXP": {
+      "eastmoney_secu_code": "NXPI.O",
+      "msn_search_query": "NXP Semiconductors",
+      "display_name": "恩智浦 NXP",
+      "legal_name": "NXP Semiconductors N.V.",
+      "reporting_currency": "USD",
+      "fiscal_note": "Calendar-year reporter; quarters align with calendar quarters.",
+      "primary_domains": ["investors.nxp.com", "media.nxp.com"],
+      "query_templates": {
+        "quarter": "NXP Semiconductors reports {period_label} {year} results revenue",
+        "half_year": "NXP Semiconductors {year} first half revenue",
+        "annual": "NXP Semiconductors {year} annual revenue annual report"
+      }
+    },
+    "STM": {
+      "eastmoney_secu_code": "STM.N",
+      "display_name": "意法半导体 STM",
+      "legal_name": "STMicroelectronics N.V.",
+      "reporting_currency": "USD",
+      "fiscal_note": "Calendar-year reporter; quarters align with calendar quarters.",
+      "primary_domains": ["newsroom.st.com", "investors.st.com"],
+      "query_templates": {
+        "quarter": "STMicroelectronics reports {year} {period_label} financial results net revenues",
+        "half_year": "STMicroelectronics {year} first half net revenues",
+        "annual": "STMicroelectronics {year} full year net revenues"
+      }
+    },
+    "ADI": {
+      "eastmoney_secu_code": "ADI.O",
+      "display_name": "亚德诺 ADI",
+      "legal_name": "Analog Devices, Inc.",
+      "reporting_currency": "USD",
+      "fiscal_note": "Fiscal year ends around late October/early November. Calendar Q1 usually maps closest to fiscal Q2; disclose exact fiscal quarter end date.",
+      "primary_domains": ["investor.analog.com"],
+      "query_templates": {
+        "quarter": "Analog Devices reports fiscal {fiscal_period_label} {fiscal_year} financial results revenue",
+        "half_year": "Analog Devices fiscal {fiscal_year} first half revenue",
+        "annual": "Analog Devices fiscal {fiscal_year} annual revenue"
+      }
+    },
+    "Renesas": {
+      "display_name": "瑞萨 Renesas",
+      "legal_name": "Renesas Electronics Corporation",
+      "reporting_currency": "JPY",
+      "fiscal_note": "Calendar-year reporter under IFRS; quarters align with calendar quarters.",
+      "source_priority": ["msn_crosscheck", "official_filing"],
+      "msn_currency": "JPY",
+      "eastmoney_us_available": false,
+      "primary_domains": ["renesas.com"],
+      "query_templates": {
+        "quarter": "Renesas reports financial results first quarter ended March 31 {year} revenue",
+        "half_year": "Renesas financial results six months ended June 30 {year} revenue",
+        "annual": "Renesas financial results year ended December 31 {year} revenue"
+      }
+    },
+    "onsemi": {
+      "eastmoney_secu_code": "ON.O",
+      "display_name": "安森美 ON",
+      "legal_name": "onsemi",
+      "reporting_currency": "USD",
+      "fiscal_note": "Calendar-year reporter; quarters align with calendar quarters.",
+      "primary_domains": ["onsemi.com", "investor.onsemi.com"],
+      "query_templates": {
+        "quarter": "onsemi reports {period_label} {year} results revenue",
+        "half_year": "onsemi {year} first half revenue results",
+        "annual": "onsemi {year} annual revenue annual report"
+      }
+    },
+    "Microchip": {
+      "eastmoney_secu_code": "MCHP.O",
+      "display_name": "微芯 Microchip",
+      "legal_name": "Microchip Technology Incorporated",
+      "reporting_currency": "USD",
+      "fiscal_note": "Fiscal year ends March 31. Calendar Q1 usually maps to fiscal Q4.",
+      "primary_domains": ["ir.microchip.com"],
+      "query_templates": {
+        "quarter": "Microchip Technology fiscal fourth quarter {fiscal_year} revenue",
+        "half_year": "Microchip Technology fiscal {fiscal_year} first half revenue",
+        "annual": "Microchip Technology fiscal year {fiscal_year} revenue"
+      }
+    },
+    "MPS": {
+      "eastmoney_secu_code": "MPWR.O",
+      "display_name": "芯源 MPS",
+      "legal_name": "Monolithic Power Systems, Inc.",
+      "reporting_currency": "USD",
+      "fiscal_note": "Calendar-year reporter; quarters align with calendar quarters.",
+      "primary_domains": ["monolithicpower.com", "investor.monolithicpower.com"],
+      "query_templates": {
+        "quarter": "Monolithic Power Systems reports {period_label} {year} results revenue",
+        "half_year": "Monolithic Power Systems {year} first half revenue",
+        "annual": "Monolithic Power Systems {year} annual revenue annual report"
+      }
+    },
+    "Silergy": {
+      "msn_id": "ancabh",
+      "display_name": "矽力杰 Silergy",
+      "legal_name": "Silergy Corp.",
+      "reporting_currency": "USD",
+      "fiscal_note": "Taiwan listed company; not covered by the Eastmoney US F10 universe. Use official monthly revenue announcements, then aggregate to calendar quarters and H1.",
+      "source_priority": ["msn_crosscheck", "official_monthly"],
+      "monthly_revenue_required": true,
+      "msn_available": true,
+      "msn_currency": "TWD",
+      "msn_quarterly_supported": true,
+      "msn_gross_margin_supported": true,
+      "official_monthly_source_url": "https://www.silergy.com/news/financial",
+      "official_monthly_page_title": "Financial Information - Unaudited Consolidated Revenues",
+      "official_monthly_currency": "USD",
+      "official_monthly_unit": "USD K",
+      "official_monthly_metric": "Unaudited Consolidated Revenues",
+      "official_monthly_fields": ["month", "monthly", "monthly_yoy", "ytd", "ytd_yoy"],
+      "official_monthly_aggregation": {
+        "quarter": "sum monthly USD K by calendar quarter",
+        "half_year": "sum January-June monthly USD K",
+        "annual": "sum January-December monthly USD K"
+      },
+      "primary_domains": ["silergy.com"],
+      "query_templates": {
+        "quarter": "Silergy {year} {period_label} revenue monthly sales",
+        "half_year": "Silergy {year} first half revenue monthly sales",
+        "annual": "Silergy {year} annual revenue monthly sales"
+      }
+    }
+  }
+}

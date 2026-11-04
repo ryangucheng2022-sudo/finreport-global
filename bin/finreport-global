@@ -1,0 +1,190 @@
+#!/usr/bin/env python3
+"""finreport-global — overseas (non-A-share) peer financial data engine.
+
+Pipeline: Eastmoney US F10 structured API as the primary source, MSN
+Finance as cross-check / fallback, official-source search and monitoring
+for revenue candidates, fiscal-calendar mapping for non-calendar fiscal
+years, period-average FX conversion (ECB / Taiwan central bank), and
+normalization to USD thousands with field-level source audit.
+
+Extracted from a production peer-monitoring system; company watchlist is
+configuration (config/watchlist.json), not code.
+
+Commands:
+  fetch            structured fetch (F10 primary, MSN cross-check/fallback)
+  plan             official-source search plan for a period
+  auto             search official sources, extract revenue candidates
+  monitor          refresh candidates against a reviewed normalized CSV
+  template         write the raw revenue input template
+  normalize        normalize captured revenue to USD thousands
+  detail-template  write the company-detail input template
+  detail-validate  validate a company-detail CSV
+"""
+from __future__ import annotations
+
+import argparse
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+SRC = ROOT / "src"
+
+
+def run_script(name: str, forwarded: list[str]) -> int:
+    cmd = [sys.executable, str(SRC / name), *forwarded]
+    return subprocess.run(cmd, cwd=str(SRC)).returncode
+
+
+def cmd_plan(a) -> int:
+    fwd = ["--year", str(a.year), "--period-type", a.period_type,
+           "--period", str(a.period), "--output", a.output]
+    if a.companies:
+        fwd += ["--companies", *a.companies]
+    return run_script("overseas_source_plan.py", fwd)
+
+
+def cmd_auto(a) -> int:
+    fwd = ["--year", str(a.year), "--period-type", a.period_type,
+           "--period", str(a.period), "--output", a.output]
+    if a.compare_year:
+        fwd += ["--compare-year", str(a.compare_year)]
+    if a.companies:
+        fwd += ["--companies", *a.companies]
+    if a.source_map:
+        fwd += ["--source-map", a.source_map]
+    if a.max_search_results:
+        fwd += ["--max-search-results", str(a.max_search_results)]
+    if a.workers:
+        fwd += ["--workers", str(a.workers)]
+    return run_script("overseas_auto_collect_revenue.py", fwd)
+
+
+def cmd_fetch(a) -> int:
+    fwd = ["--target", a.target, "--compare", a.compare, "--output", a.output,
+           "--raw-dir", a.raw_dir, "--audit-json", a.audit_json,
+           "--fallback-mode", a.fallback_mode, "--tolerance", str(a.tolerance)]
+    if a.fallback_normalized_csv:
+        fwd += ["--fallback-normalized-csv", a.fallback_normalized_csv]
+    return run_script("overseas_auto_financials.py", fwd)
+
+
+def cmd_template(a) -> int:
+    return run_script("overseas_normalize_revenue_report.py",
+                      ["--write-template", a.output])
+
+
+def cmd_normalize(a) -> int:
+    fwd = ["--input", a.input, "--output", a.output]
+    if a.markdown:
+        fwd += ["--markdown", a.markdown]
+    if a.fx_evidence_dir:
+        fwd += ["--fx-evidence-dir", a.fx_evidence_dir]
+    if a.no_auto_fx:
+        fwd.append("--no-auto-fx")
+    return run_script("overseas_normalize_revenue_report.py", fwd)
+
+
+def cmd_monitor(a) -> int:
+    return run_script("overseas_monitor.py", [
+        "--normalized-csv", a.normalized_csv, "--year", str(a.year),
+        "--period-type", a.period_type, "--period", str(a.period),
+        "--workers", str(a.workers),
+        "--timeout-seconds", str(a.timeout_seconds),
+        "--output-dir", a.output_dir])
+
+
+def cmd_detail_template(a) -> int:
+    return run_script("overseas_validate_company_detail.py",
+                      ["--write-template", a.output])
+
+
+def cmd_detail_validate(a) -> int:
+    return run_script("overseas_validate_company_detail.py",
+                      ["--input", a.input, "--tolerance", str(a.tolerance)])
+
+
+def build_parser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(prog="finreport-global",
+                                description=__doc__)
+    sub = p.add_subparsers(dest="command", required=True)
+
+    s = sub.add_parser("plan", help="Official-source search plan for a period.")
+    s.add_argument("--year", type=int, required=True)
+    s.add_argument("--period-type", choices=["quarter", "half_year", "annual"],
+                   required=True)
+    s.add_argument("--period", default="1")
+    s.add_argument("--companies", nargs="*",
+                   help="Company keys from the watchlist, e.g. TI Infineon NXP")
+    s.add_argument("--output", required=True)
+    s.set_defaults(func=cmd_plan)
+
+    s = sub.add_parser("auto", help="Search official sources and extract revenue candidates.")
+    s.add_argument("--year", type=int, required=True)
+    s.add_argument("--period-type", choices=["quarter", "half_year", "annual"],
+                   required=True)
+    s.add_argument("--period", default="1")
+    s.add_argument("--compare-year", type=int)
+    s.add_argument("--companies", nargs="*")
+    s.add_argument("--source-map", help="CSV: company_key,period_role,source_urls")
+    s.add_argument("--max-search-results", type=int, default=3)
+    s.add_argument("--workers", type=int, default=4)
+    s.add_argument("--output", required=True)
+    s.set_defaults(func=cmd_auto)
+
+    s = sub.add_parser("fetch", help="Structured fetch: Eastmoney US F10 primary, MSN cross-check/fallback, raw audit evidence.")
+    s.add_argument("--target", required=True,
+                   help="Target report date, e.g. 2026-06-30 (H1) or 2026-12-31 (annual)")
+    s.add_argument("--compare", required=True,
+                   help="Same-period-type date one year earlier")
+    s.add_argument("--output", required=True)
+    s.add_argument("--raw-dir", required=True)
+    s.add_argument("--audit-json", required=True)
+    s.add_argument("--fallback-normalized-csv")
+    s.add_argument("--fallback-mode", choices=["fallback", "override"],
+                   default="fallback")
+    s.add_argument("--tolerance", type=float, default=0.01)
+    s.set_defaults(func=cmd_fetch)
+
+    s = sub.add_parser("template", help="Write the raw revenue input template.")
+    s.add_argument("--output", required=True)
+    s.set_defaults(func=cmd_template)
+
+    s = sub.add_parser("normalize", help="Normalize captured revenue to USD thousands.")
+    s.add_argument("--input", required=True)
+    s.add_argument("--output", required=True)
+    s.add_argument("--markdown")
+    s.add_argument("--fx-evidence-dir")
+    s.add_argument("--no-auto-fx", action="store_true")
+    s.set_defaults(func=cmd_normalize)
+
+    s = sub.add_parser("monitor", help="Refresh official-source candidates while preserving reviewed values.")
+    s.add_argument("--normalized-csv", required=True)
+    s.add_argument("--year", type=int, required=True)
+    s.add_argument("--period-type", choices=["quarter", "half_year", "annual"],
+                   required=True)
+    s.add_argument("--period", default="1")
+    s.add_argument("--workers", type=int, default=8)
+    s.add_argument("--timeout-seconds", type=int, default=120)
+    s.add_argument("--output-dir", required=True)
+    s.set_defaults(func=cmd_monitor)
+
+    s = sub.add_parser("detail-template", help="Write the company-detail input template.")
+    s.add_argument("--output", required=True)
+    s.set_defaults(func=cmd_detail_template)
+
+    s = sub.add_parser("detail-validate", help="Validate a company-detail CSV.")
+    s.add_argument("--input", required=True)
+    s.add_argument("--tolerance", type=float, default=0.01)
+    s.set_defaults(func=cmd_detail_validate)
+
+    return p
+
+
+def main(argv=None) -> int:
+    args = build_parser().parse_args(argv)
+    return args.func(args)
+
+
+if __name__ == "__main__":
+    sys.exit(main())
