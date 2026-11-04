@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+raw/
+work/
+*.csv
+!config/*.json
+config/watchlist.json
