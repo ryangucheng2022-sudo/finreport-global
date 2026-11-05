@@ -24,6 +24,14 @@ watchlist.json ──► fetch ──► Eastmoney US F10 (primary, structured)
 - **FX**: non-USD figures are converted with period-average rates — ECB daily reference rates for EUR/JPY/CNY, Taiwan central bank interbank data for TWD — with the raw rate evidence saved alongside.
 - **Undisclosed means undisclosed**: if no source has formally reported a period, the row says so. Forecasts, guidance and estimates are never substituted.
 
+## Method
+
+- **Primary source.** Eastmoney's US-stock F10 provides structured revenue and margin data — the working source for the peer tables.
+- **Cross-check, not blind trust.** MSN Finance figures are compared against the primary source for the same period; where the primary source lacks a period, MSN is the fallback. Disagreements are surfaced in the output, never silently averaged away.
+- **Fiscal-calendar mapping.** Fiscal years are mapped to calendar periods per company (a "FY2026" ending in June is not treated as calendar 2026). The mapping is explicit data in the repo, not an assumption in code.
+- **Normalization.** Revenue and gross profit are converted to one basis (USD thousands) using dated FX rates, so every company in a table shares the same unit and period definition before any comparison or ranking.
+- **Validation.** A per-company detail check re-reads the collected figures against the source plan before a report is assembled.
+
 ## Commands
 
 ```bash
