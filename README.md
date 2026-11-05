@@ -83,6 +83,10 @@ Both upstream response shapes are pinned by sanitized fixtures under `tests/fixt
 - Python 3.10+, `requests`. Developed on Linux.
 - `python3 -m unittest discover -s tests -v` — 26 offline cases (FX math, fiscal mapping, F10/MSN extraction, normalization, monitoring) all passing.
 
+## CI
+
+A ready-to-enable GitHub Actions kit lives in `ci/`: copy `ci/ci.yml` to `.github/workflows/ci.yml`. It runs the schema-drift contract tests and the fx / auto-financials / company-detail / normalize suites; the monitor suite is excluded for now — two of its cases need an operator-side config that is not in this repo (see `ci/README.md`).
+
 ## Version
 
 v1.0.0 — see [CHANGELOG.md](CHANGELOG.md). Packaging notes (what was adapted during extraction) are listed there.

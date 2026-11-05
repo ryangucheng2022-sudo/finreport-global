@@ -83,6 +83,10 @@ MSN Finance 调用使用其网页端随页面公开下发的客户端 key。本�
 - Python 3.10+、`requests`；Linux 环境开发验证。
 - `python3 -m unittest discover -s tests -v`——26 个离线用例（汇率、财年映射、F10/MSN 抽取、标准化、监测）全绿。
 
+## 持续集成
+
+`ci/` 里备有 GitHub Actions 工具包：把 `ci/ci.yml` 复制到 `.github/workflows/ci.yml` 即可启用。运行范围为 drift 契约测试与 fx、auto-financials、company-detail、normalize 四个套件；monitor 套件暂不纳入——其中两个用例依赖不在仓库里的运营侧配置（见 `ci/README.md`）。
+
 ## 版本
 
 v1.0.0 —— 见 [CHANGELOG.md](CHANGELOG.md)（含剥离时的适配说明）。
