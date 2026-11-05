@@ -74,6 +74,10 @@ MSN Finance lookups use the public web client key that MSN ships in its own page
 
 Eastmoney F10 and MSN Finance are public web interfaces, not official open APIs; they may change without notice. This project is for research and internal analysis — respect the sources' terms of use. Figures are only as good as the underlying disclosures; the audit trail exists so you can verify them.
 
+## Data-source contracts
+
+Both upstream response shapes are pinned by sanitized fixtures under `tests/fixtures/` and exercised through the real parsers in `tests/test_schema_drift.py`: if Eastmoney or MSN renames a field, the test suite fails rather than a peer table silently emptying. Fixture values are synthetic.
+
 ## Requirements & tests
 
 - Python 3.10+, `requests`. Developed on Linux.
