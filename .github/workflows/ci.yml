@@ -1,0 +1,14 @@
+# Copy to .github/workflows/ci.yml to enable (see ci/README.md).
+name: ci
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - name: Test suite (scope note in ci/README.md)
+        run: PYTHONPATH=tests python -m unittest tests.test_schema_drift tests.test_fx_rates tests.test_overseas_auto_financials tests.test_overseas_company_detail tests.test_overseas_normalize -v
